@@ -9,15 +9,17 @@ train_data = "train_data.csv"
 
 
 def snakify(column_name):
-    '''Function to convert pandas column names into snake case.
+    """
+    Function to convert pandas column names into snake case.
     CSV's created by SAS have UPPERCASE column names.
-    '''
+    """
     s1 = re.sub('(.)([A-Z][a-z]+)', r'\1_\2', column_name)
     return re.sub('([a-z0-9])([A-Z])', r'\1_\2', s1).lower()
 
 
 def load_data(data):
-    """Load dataset into a pandas dataframe from csv.
+    """
+    Load dataset into a pandas dataframe from csv.
     The data should have the following columns:
         customer_id: key
         frequency_cal: # of unique days of txn.
@@ -29,7 +31,8 @@ def load_data(data):
         data)  # I need to set up ingestion from cloud storage / BQ
     logging.info('Data loaded to pandas DF.')
     data.columns = [
-        snakify(col) if col != "T_CAL" else 'T_cal' for col in data.columns
+        snakify(col) if col not in ("T_CAL", "t_cal") else 'T_cal'
+         for col in data.columns
     ]
     logging.info('Data columns modified to conform to package rules')
     key = 'customer_id'
